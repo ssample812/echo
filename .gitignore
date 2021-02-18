@@ -1,7 +1,7 @@
 myenv
 __pycache__
 .pytest_cache
-workspace.code
+workspace.code-workspace
 PKG-INFO
 SOURCES.txt
 top_level.txt
