@@ -29,14 +29,16 @@ jobs:
         with:
           node-version: '12.x'
           
-      - name: Python Set Up
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
       # Sets up npm environment 
       - name: npm install
         run: npm install
+      - name: Test with npm
+        run: npm test
+          
+      - name: Python Set Up
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
       # Install dependencies
       - name: Install dependencies
@@ -54,6 +56,3 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-          
-      - name: Test with npm
-        run: npm test
