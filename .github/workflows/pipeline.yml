@@ -38,16 +38,22 @@ jobs:
       - name: npm install
         run: npm install
 
-      # Runs a set of commands using the runners shell
-      # This is how we will also install dependencies
-      - name: Run a multi-line script
+      # Install dependencies
+      - name: Install dependencies
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 .
           
       - name: Test with pytest
         run: |
-          pytest
+          pip install pytest
+          pip install pytest-cov
+          pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
           
       - name: Test with npm
         run: npm test
