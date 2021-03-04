@@ -18,10 +18,10 @@ class DDBClient:
         #probably do not want service_resource as anything other than a temp variable
         #service_resource technically has access to the whole DDB resources on the account (which we dont need)
         service_resource = resource if resource else boto3.resource('dynamodb')
-        self.table = table if table else service_resource.table(table_name)
+        self.table = table if table else service_resource.Table(table_name)
     
     def push(self, data):
-        response = self.table.put_item(data)
+        response = self.table.put_item(Item=data)
         return response
     
     def pull_user_songs(self, user_id):

@@ -1,9 +1,9 @@
 from db_client import DDBClient
 import json
-from exceptions.py import NoDataException
+from exceptions import NoDataException
 
 def push_handler(event, context, client = None):
-    event_json = json.loads(event)
+    event_json = json.loads(event) if type(event) == 'String' else event
     ddb_client = client if client else DDBClient()
     data = event_json.get('data',None)
     if(data):
