@@ -1,7 +1,7 @@
 import React from 'react'
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from './whitetenor.png'
-
+import {Link} from 'react-router-dom';
 import { Button, Navbar, Nav } from 'react-bootstrap'
 
 
@@ -22,9 +22,18 @@ function NavigationBar() {
       <Navbar.Toggle />
       <Navbar.Collapse>
         <Nav className="ml-auto">
-          <Nav.Link href="#home">About</Nav.Link>
-          <Nav.Link href="#home">Create Account</Nav.Link>
-          <Button>Login</Button>
+        <ul>
+            <li>
+              <Link to='/home'>
+              Home
+              </Link>
+            </li>
+            <li>
+              <Link to='/dashboard'>
+                Dashboard
+              </Link>
+            </li>
+          </ul>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
