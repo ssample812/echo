@@ -22,18 +22,9 @@ function NavigationBar() {
       <Navbar.Toggle />
       <Navbar.Collapse>
         <Nav className="ml-auto">
-        <ul>
-            <li>
-              <Link to='/home'>
-              Home
-              </Link>
-            </li>
-            <li>
-              <Link to='/dashboard'>
-                Dashboard
-              </Link>
-            </li>
-          </ul>
+         <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
+          <Nav.Link as={Link} to='/home'>Home</Nav.Link>
+          <Button>Login</Button>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
