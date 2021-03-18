@@ -58,3 +58,17 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+      
+      - name: Build binary
+        run:  |
+          cd example && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -a -o main main.go && zip deployment.zip main
+          # Fix ^^ this command because it won't work yet 
+      - name: Deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION_NAME }}
+          function-name: sample
+          zip: sample.zip
+
