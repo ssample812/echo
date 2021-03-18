@@ -15,16 +15,17 @@ class DBHandlerTests(unittest.TestCase):
     
     def test_push_handler(self):
         self.mockClient.push.return_value = "PUSHED!"
-        self.assertRaises(NoDataException,push_handler,test_fail_event,None,self.mockClient)
-        assert(push_handler(test_event,None,self.mockClient) == "PUSHED!")
+        self.assertRaises(NoDataException,push_handler,self.test_fail_event,None,self.mockClient)
+        assert(push_handler(self.test_event,None,self.mockClient) == "PUSHED!")
     
     def test_pull_song_handler(self):
         self.mockClient.pull_user_songs.return_value = "music"
-        self.assertRaises(NoUserIDException,pull_song_handler,test_fail_event,None,self.mockClient)
-        assert(pull_song_handler(test_event,None,self.mockClient) == "music")
+        self.assertRaises(NoUserIDException,pull_song_handler,self.test_fail_event,None,self.mockClient)
+        assert(pull_song_handler(self.test_event,None,self.mockClient) == "music")
     
     def test_pull_user_handler(self):
-        self.mockClient.pull_user_songs.return_value = "user"
-        self.assertRaises(NoUserIDException,pull_user_handler,test_fail_event,None,self.mockClient)
-        assert(pull_user_handler(test_event,None,self.mockClient) == "user")
+        self.mockClient.pull_user_account.return_value = "user"
+        self.assertRaises(NoUserIDException,pull_user_handler,self.test_fail_event,None,self.mockClient)
+        assert(pull_user_handler(self.test_event,None,self.mockClient) == "user")
+
 

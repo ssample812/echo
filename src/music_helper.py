@@ -6,7 +6,7 @@ import os
 
 
 # Temporary variables for path, will need to change for the Lambda
-default_path = "/Users/samanthasample/Documents/College/Capstone/echo/src"
+# default_path = "/Users/samanthasample/Documents/College/Capstone/echo/src"
 blank_score_file = 'blank_score.musicxml'
 
 
@@ -47,11 +47,13 @@ def m21_to_musicxml(score: Score) -> str:
 
 # Temporary Testing
 
-os.chdir(default_path)
 
-score = Score()
-print(m21_to_musicxml(score))
+#I am commenting this out for the purpose of fixing the build...
+# os.chdir(default_path)
 
-with open(blank_score_file) as f:
-    music_xml = f.read()
-    print(musicxml_to_m21(music_xml))
+# score = Score()
+# print(m21_to_musicxml(score))
+
+# with open(blank_score_file) as f:
+#     music_xml = f.read()
+#     print(musicxml_to_m21(music_xml))

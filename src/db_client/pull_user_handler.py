@@ -1,6 +1,6 @@
-from db_client import DDBClient
+from src.db_client.db_client import DDBClient
 import json
-from exceptions import NoUserIDException
+from src.db_client.exceptions import NoUserIDException
 
 def pull_user_handler(event, context, client = None):
     event_json = json.loads(event)
