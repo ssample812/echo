@@ -58,3 +58,40 @@ jobs:
           pip install pytest
           pip install pytest-cov
           pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+    
+    # credentials to connect to AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 
+          profile_name: default 
+          project_name: Echo
+          runtime: python3.9
+          
+    # Zip functions to deploy to lambda
+      - name: Zip functions
+        run: |
+          zip -r pull_song.zip ./pull_song_handler.py ./db_client.py ./exceptions.py
+          zip -r pull_user.zip ./pull_user_handler.py ./db_client.py ./exceptions.py
+          zip -r push.zip ./push_handler.py ./db_client.py ./exceptions.py
+          
+    # Deploy to AWS
+      - name: AWS Lambda Deploy pull_song
+        uses: appleboy/lambda-action@v0.0.4
+        with:
+            #name of my AWS Lambda Function
+            function_name: pull_song
+            #contains all the files for the lambda
+            zip_file: pull_song.zip
+      - name: AWS Lambda Deploy pull_account
+        uses: appleboy/lambda-action@v0.0.4
+        with:
+            function_name: pull_account
+            zip_file: pull_user.zip
+      - name: AWS Lambda Deploy push
+        uses: appleboy/lambda-action@v0.0.4
+        with:
+            function_name: push_data
+            zip_file: push.zip
