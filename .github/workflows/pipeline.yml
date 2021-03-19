@@ -51,7 +51,7 @@ jobs:
       - name: Lint with flake8
         run: |
           pip install flake8
-          flake8 --ignore=E .
+          flake8 --ignore=E,W .
           
       - name: Test with pytest
         run: |
