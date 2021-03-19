@@ -1,8 +1,9 @@
-from music21.stream import Score
-from music21.musicxml.xmlToM21 import MusicXMLImporter
-from music21.musicxml.m21ToXml import GeneralObjectExporter
+# import os
 import xml.etree.ElementTree as ET
-import os
+
+from music21.musicxml.m21ToXml import GeneralObjectExporter
+from music21.musicxml.xmlToM21 import MusicXMLImporter
+from music21.stream import Score
 
 
 # Temporary variables for path, will need to change for the Lambda
@@ -14,7 +15,7 @@ blank_score_file = 'blank_score.musicxml'
 Parses a musicXML string into a music21 Score object
 
 :param xml_string: musicXML string
-:return: :class:`music23.stream.Score object`
+:return: :class:`music23.stream.Score` object
 '''
 def musicxml_to_m21(xml_string: str) -> Score:
     mx = MusicXMLImporter()
@@ -30,8 +31,8 @@ def musicxml_to_m21(xml_string: str) -> Score:
 '''
 Creates a musicXML string from a music21 Score object
 
-:param score: :class:`music23.stream.Score object`
-:return: musicXML String
+:param score: :class:`music23.stream.Score` object
+:return: musicXML string
 '''
 def m21_to_musicxml(score: Score) -> str:
     goe = GeneralObjectExporter()
