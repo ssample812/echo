@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url('./piano.jpg') no-repeat center center fixed;
+    background: url('./static/piano.jpg') no-repeat center center fixed;
     -webkit-background-size: 100%;
     -moz-background-size: 100%;
     background-size: 100%;
