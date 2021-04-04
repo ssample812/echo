@@ -1,6 +1,6 @@
 import React from 'react'
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from '../../static/whitetenor.png'
+import logo from './whitetenor.png'
 import {Link} from 'react-router-dom';
 import { Button, Navbar, Nav } from 'react-bootstrap'
 
