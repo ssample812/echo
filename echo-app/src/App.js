@@ -1,4 +1,4 @@
-import NavigationBar from './NavigationBar'
+import NavigationBar from './pages/NavigationBar/NavigationBar'
 import Home from './pages/Home/Home'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Create from './pages/Create/Create'
