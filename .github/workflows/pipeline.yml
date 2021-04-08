@@ -70,15 +70,21 @@ jobs:
           project_name: Echo
           runtime: python3.9
           
+    # Zip things
+      - name: Zip pull
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./pull.zip src/db_client/pull_song_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+      
     # Deploy to AWS
       - name: Deploy to pull_song lambda
         uses: appleboy/lambda-action@v0.1.3
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws_region: us-east-1
           function_name: pull_song
-          source: src/db_client/pull_song_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          zip_file: pull.zip
           dry_run: true
           
       - name: Deploy to pull_account lambda
