@@ -70,28 +70,33 @@ jobs:
           project_name: Echo
           runtime: python3.9
           
-    # Zip functions to deploy to lambda
-      - name: Zip functions
-        run: |
-          zip -r pull_song.zip . -i ./pull_song_handler.py ./db_client.py ./exceptions.py
-          zip -r pull_user.zip . -i ./pull_user_handler.py ./db_client.py ./exceptions.py
-          zip -r push.zip . -i ./push_handler.py ./db_client.py ./exceptions.py
-          
     # Deploy to AWS
-      - name: AWS Lambda Deploy pull_song
-        uses: appleboy/lambda-action@v0.0.4
+      - name: Deploy to pull_song lambda
+        uses: appleboy/lamda-action@master
         with:
-            #name of my AWS Lambda Function
-            function_name: pull_song
-            #contains all the files for the lambda
-            zip_file: pull_song.zip
-      - name: AWS Lambda Deploy pull_account
-        uses: appleboy/lambda-action@v0.0.4
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          function_name: pull_song
+          source: src/db_client/pull_song_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          dry_run: true
+          
+      - name: Deploy to pull_account lambda
+        uses: appleboy/lamda-action@master
         with:
-            function_name: pull_account
-            zip_file: pull_user.zip
-      - name: AWS Lambda Deploy push
-        uses: appleboy/lambda-action@v0.0.4
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          function_name: pull_account
+          source: src/db_client/pull_user_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          dry_run: true
+          
+      - name: Deploy to push_data lambda
+        uses: appleboy/lamda-action@master
         with:
-            function_name: push_data
-            zip_file: push.zip
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          function_name: push_data
+          source: src/db_client/push_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          dry_run: true
