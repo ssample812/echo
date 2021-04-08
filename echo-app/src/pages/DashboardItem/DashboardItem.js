@@ -1,5 +1,4 @@
 function DashboardItem(props) {
-    console.log(props.song.song_title)
     return(
         <>
             <div>
