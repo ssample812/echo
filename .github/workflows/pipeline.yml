@@ -73,9 +73,9 @@ jobs:
     # Zip functions to deploy to lambda
       - name: Zip functions
         run: |
-          zip -r pull_song.zip ./pull_song_handler.py ./db_client.py ./exceptions.py
-          zip -r pull_user.zip ./pull_user_handler.py ./db_client.py ./exceptions.py
-          zip -r push.zip ./push_handler.py ./db_client.py ./exceptions.py
+          zip -r pull_song.zip . -i ./pull_song_handler.py ./db_client.py ./exceptions.py
+          zip -r pull_user.zip . -i ./pull_user_handler.py ./db_client.py ./exceptions.py
+          zip -r push.zip . -i ./push_handler.py ./db_client.py ./exceptions.py
           
     # Deploy to AWS
       - name: AWS Lambda Deploy pull_song
