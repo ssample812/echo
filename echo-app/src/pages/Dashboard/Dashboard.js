@@ -17,21 +17,22 @@ function Dashboard() {
         // {
         //     song_title: "song2"
         // }];
-        const url='https://q3yhyoo56l.execute-api.us-east-1.amazonaws.com/default/pull_song';
-        const body = {"user_id": "Jonah Marz"}
-        const response = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(body)
-        });
-        const resp = await response.json();
-        setSongs(resp.body)
+
     
     
     }
+    // getSongs();
 
     useEffect(() => {
-        getSongs();
-    },[songs])
+        const url='https://q3yhyoo56l.execute-api.us-east-1.amazonaws.com/default/pull_song';
+        const body = {"user_id": "Jonah Marz"}
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        })
+        .then(resp => resp.json())
+        .then(data => setSongs(data.body));
+    })
     //Need to make this work with the async
     return(
         <>
