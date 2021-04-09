@@ -12,9 +12,16 @@ from music_helper import m21_to_musicxml, musicxml_to_m21
 def songs_handler(event, context, client=None):
     ddb_client = client if client else DDBClient()
 
-    user_id = event.get('headers').get('userid')
+    try:
+        escaped_body = event.get('body')
+        request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
+        request_dict = json.loads(request_body)
+    except Exception:
+        raise BadRequestException('No request body')
+
+    user_id = request_dict.get('userid')
     if not user_id:
-        raise NoUserIDException("No UserID in the input")
+        raise NoUserIDException("No UserID in body")
 
     path = event.get('requestContext').get('http').get('path')
     http_method = event.get('requestContext').get('http').get('method')
@@ -27,20 +34,14 @@ def songs_handler(event, context, client=None):
     if path == '/songs' and http_method == 'POST':
         return handle_songs_post(ddb_client, user_id)
 
-    item_id = event.get('headers').get('itemid')
+    item_id = request_dict.get('itemid')
     if not item_id:
-        raise BadRequestException('No item id given')
+        raise BadRequestException('No ItemID in body')
 
     if path == '/songs/create' and http_method == 'GET':
         return handle_create_get(ddb_client, user_id, item_id)
 
     if path == '/songs/create' and http_method == 'PUT':
-        try:
-            escaped_body = event.get('body')
-            request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
-            request_dict = json.loads(request_body)
-        except Exception:
-            raise BadRequestException('Bad request body')
         return handle_create_put(ddb_client, user_id, item_id, request_dict)
 
     if path == '/songs/create' and http_method == 'DELETE':
@@ -79,13 +80,18 @@ def handle_create_get(db: DDBClient, user_id: str, item_id: int):
 
 
 def handle_create_put(db: DDBClient, user_id: str, item_id: int, request: dict):
+    if 'title' not in request and 'note' not in request:
+        raise BadRequestException("Put request formatted incorrectly")
+
     db_response = db.pull_user_song(user_id, item_id)
     if not db_response:
         raise NoDataException("Song does not exist")
     music_xml = db_response[0].get("MusicXml")
+
     score = musicxml_to_m21(music_xml)
     updated_score = handle_update_request(request, score)
     updated_music_xml = m21_to_musicxml(updated_score)
+
     item_data = db_response[0]
     item_data["MusicXml"] = updated_music_xml
     if request.get("title"):
