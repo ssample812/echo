@@ -12,16 +12,9 @@ from music_helper import m21_to_musicxml, musicxml_to_m21
 def songs_handler(event, context, client=None):
     ddb_client = client if client else DDBClient()
 
-    try:
-        escaped_body = event.get('body')
-        request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
-        request_dict = json.loads(request_body)
-    except Exception:
-        raise BadRequestException('No request body')
-
-    user_id = request_dict.get('userid')
+    user_id = event.get('headers').get('userid')
     if not user_id:
-        raise NoUserIDException("No UserID in body")
+        raise NoUserIDException("No UserID in the input")
 
     path = event.get('requestContext').get('http').get('path')
     http_method = event.get('requestContext').get('http').get('method')
@@ -34,14 +27,20 @@ def songs_handler(event, context, client=None):
     if path == '/songs' and http_method == 'POST':
         return handle_songs_post(ddb_client, user_id)
 
-    item_id = request_dict.get('itemid')
+    item_id = event.get('headers').get('itemid')
     if not item_id:
-        raise BadRequestException('No ItemID in body')
+        raise BadRequestException('No item id given')
 
     if path == '/songs/create' and http_method == 'GET':
         return handle_create_get(ddb_client, user_id, item_id)
 
     if path == '/songs/create' and http_method == 'PUT':
+        try:
+            escaped_body = event.get('body')
+            request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
+            request_dict = json.loads(request_body)
+        except Exception:
+            raise BadRequestException('Bad request body')
         return handle_create_put(ddb_client, user_id, item_id, request_dict)
 
     if path == '/songs/create' and http_method == 'DELETE':
