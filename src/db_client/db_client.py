@@ -22,40 +22,39 @@ class DDBClient:
         self.table = table if table else service_resource.Table(table_name)
     
     def push(self, data):
-        user_id = data.get('UserName')
+        user_id = data.get('UserID')
         if user_id is not None:
             raise NoUserIDException
-        query_result = self.table.query(KeyConditionExpression=Key('UserName').eq(user_id)).get('Items')
-        recent_num = query_result[-1]['ItemCount']+1 if query_result else 0
-        data['ItemCount'] = recent_num
+        query_result = self.table.query(KeyConditionExpression=Key('UserID').eq(user_id)).get('Items')
+        recent_num = query_result[-1]['ItemID']+1 if query_result else 0
+        data['ItemID'] = recent_num
         response = self.table.put_item(Item=data)
         return response
     
     def pull_user_songs(self, user_id):
         response = self.table.query(
         KeyConditionExpression=
-            Key('UserName').eq(user_id)
+            Key('UserID').eq(user_id)
         )
         return response['Items'][1:]
 
     def pull_user_account(self, user_id):
         response = self.table.query(
         KeyConditionExpression=
-            Key('UserName').eq(user_id)
+            Key('UserID').eq(user_id)
         )
         return response['Items'][0]
     
-    def pull_one_song(self, user_id, song_id):
+    def pull_one_song(self, user_id, song_name):
         response = self.table.query(
-            IndexName = "SongTitile-Index"
             KeyConditionExpression = 
-                Key('SongTitle').eq(song_id)
+                Key('UserID').eq(user_id)
         )
         items = response.get['Items']
-        if len(items) < 2:
-            return items
         for item in items:
-            if item['UserName'] == user_id:
+            item_song_name = item.get('SongName')
+            if item_song_name == song_name:
                 return item
+        return []
 
 
