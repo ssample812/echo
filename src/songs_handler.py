@@ -30,6 +30,7 @@ def songs_handler(event, context, client=None):
     item_id = event.get('headers').get('itemid')
     if not item_id:
         raise BadRequestException('No item id given')
+    item_id = int(item_id)
 
     if path == '/songs/create' and http_method == 'GET':
         return handle_create_get(ddb_client, user_id, item_id)
