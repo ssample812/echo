@@ -1,4 +1,4 @@
-from db_client import DDBClient
+from db_client.db_client import DDBClient
 import json
 from exceptions import NoUserIDException
 
