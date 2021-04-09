@@ -7,6 +7,7 @@
 import os
 import boto3
 from boto3.dynamodb.conditions import Key
+from exceptions import NoUserIDException
 
 #Lambda lets us store this as environment variables
 table_name = os.environ.get('table_name',None)
@@ -21,20 +22,39 @@ class DDBClient:
         self.table = table if table else service_resource.Table(table_name)
     
     def push(self, data):
+        user_id = data.get('UserID')
+        if user_id is not None:
+            raise NoUserIDException
+        query_result = self.table.query(KeyConditionExpression=Key('UserID').eq(user_id)).get('Items')
+        recent_num = query_result[-1]['ItemID']+1 if query_result else 0
+        data['ItemID'] = recent_num
         response = self.table.put_item(Item=data)
         return response
     
     def pull_user_songs(self, user_id):
         response = self.table.query(
         KeyConditionExpression=
-            Key('user_id').eq(user_id) & Key('type').eq("song")
+            Key('UserID').eq(user_id)
         )
-        return response['Items']
+        return response['Items'][1:]
 
     def pull_user_account(self, user_id):
         response = self.table.query(
         KeyConditionExpression=
-            Key('user_id').eq(user_id) & Key('type').eq("account")
+            Key('UserID').eq(user_id)
         )
-        return response['Items']
+        return response['Items'][0]
+    
+    def pull_one_song(self, user_id, song_name):
+        response = self.table.query(
+            KeyConditionExpression = 
+                Key('UserID').eq(user_id)
+        )
+        items = response.get['Items']
+        for item in items:
+            item_song_name = item.get('SongName')
+            if item_song_name == song_name:
+                return item
+        return []
+
 

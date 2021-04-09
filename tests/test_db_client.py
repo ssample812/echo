@@ -15,6 +15,7 @@ class DDBClientTests(unittest.TestCase):
         self.test_client.table.put_item.return_value = "response"
         res = self.test_client.push(data) 
         assert (res == "response")
+        
     #Im only testing one pull function because they do the same thing :)
     def test_pull(self):
         return_data = {"data": 1}
