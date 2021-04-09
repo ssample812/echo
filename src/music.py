@@ -1,11 +1,9 @@
-import json
-
 from music21.duration import Duration
 from music21.note import Note, Rest
 from music21.stream import Score
 from music21.tie import Tie
 
-from src.music_helper import musicxml_to_m21
+from music_helper import musicxml_to_m21
 
 
 '''
@@ -52,6 +50,17 @@ Changes the title of a score
 '''
 def rename_song(title: str, score: Score):
     score.metadata.title = title
+    score.metadata.movementName = title
+
+
+'''
+Changes the composer of a score
+
+:param name: string, first name
+:param score: :class:`music23.stream.Score` object
+'''
+def update_composer(name: str, score: Score):
+    score.metadata.composer = name
 
 
 '''
@@ -130,11 +139,7 @@ Merges successive rests in each measure of a score
 :param score: :class:`music23.stream.Score` object
 '''
 def merge_rests(score: Score):
-    # measures = score.parts[0].measures(0,3)
-
-    # for m in measures:
-    #     elements = [e for e in m.recurse(classFilter=('Note', 'Rest'))]
-    #     print(elements)
+    # TO DO
     pass
 
 
@@ -205,9 +210,7 @@ This function is idempotent
 :param request: string, json update request
 :return: string, json response
 '''
-def handle_update_request(request: str, my_song: Score) -> Score:
-    request_dict = json.loads(request)
-
+def handle_update_request(request_dict: dict, my_song: Score) -> Score:
     if 'title' in request_dict:
         new_title = request_dict.get('title')
         rename_song(new_title, my_song)
@@ -220,28 +223,4 @@ def handle_update_request(request: str, my_song: Score) -> Score:
 
         insert_note(my_song, pitch, duration, position)
 
-    print('Full Song:')
-    my_song.show('text', addEndTimes=True)
-    my_song.show()
-
     return my_song
-
-
-if __name__ == "__main__":
-    note_request = {'note': {'pitch': 'C5', 'position': 2, 'duration': 12.5}}
-    title_request = {'title': 'Spring Day'}
-    json_request = json.dumps(note_request)
-
-    # Here we will instead be loading the musicXML string from memory and
-    # parsing it into a Score object with the 'musicxml_to_m21' function.
-    # For now, we'll use the blank song template
-    blank_song = create_blank_song()
-    song1 = handle_update_request(json_request, blank_song)
-
-    note_request2 = {'note': {'pitch': 'C5', 'position': 12, 'duration': 2}}
-    json_request2 = json.dumps(note_request2)
-    song2 = handle_update_request(json_request2, song1)
-
-    note_request3 = {'note': {'pitch': 'R', 'position': 5, 'duration': 1}}
-    json_request3 = json.dumps(note_request3)
-    song3 = handle_update_request(json_request3, song2)

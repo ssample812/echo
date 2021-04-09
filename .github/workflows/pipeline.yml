@@ -74,15 +74,15 @@ jobs:
       - name: Zip pull song
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r ./pull_song.zip src/db_client/pull_song_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          args: zip -qq -r ./pull_song.zip src/pull_song_handler.py src/db_client.py src/exceptions.py
       - name: Zip pull account
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r ./pull_account.zip src/db_client/pull_user_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          args: zip -qq -r ./pull_account.zip src/pull_user_handler.py src/db_client.py src/exceptions.py
       - name: Zip push data
         uses: montudor/action-zip@v0.1.0
         with:
-          args: zip -qq -r ./push_data.zip src/db_client/push_handler.py src/db_client/db_client.py src/db_client/exceptions.py
+          args: zip -qq -r ./push_data.zip src/push_handler.py src/db_client.py src/exceptions.py
           
     # Deploy to AWS
       - name: Deploy to pull_song lambda
