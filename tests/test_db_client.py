@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import Mock
 
-from src.db_client.db_client import DDBClient
+from src.db_client import DDBClient
 class DDBClientTests(unittest.TestCase):
 
     def setUp(self):
