@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import Mock
 
-from src.db_client.exceptions import NoDataException, NoUserIDException
-from src.db_client.pull_user_handler import pull_user_handler
-from src.db_client.pull_song_handler import pull_song_handler
-from src.db_client.push_handler import push_handler
+from src.exceptions import NoDataException, NoUserIDException
+from src.pull_user_handler import pull_user_handler
+from src.pull_song_handler import pull_song_handler
+from src.push_handler import push_handler
 
 class DBHandlerTests(unittest.TestCase):
 
