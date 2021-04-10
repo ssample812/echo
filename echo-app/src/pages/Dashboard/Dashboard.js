@@ -7,21 +7,8 @@ import Play from '../Play/Play'
 //For now this is just going to have dummy data in it because I cant test rendering with Lambda on local
 
 function Dashboard() {
-    const [songs,setSongs] = useState([{song_title:"song"}]);
-
-
-    async function getSongs(){
-        // const songs = [{
-        //     song_title: "song1"
-        // },
-        // {
-        //     song_title: "song2"
-        // }];
-
-    
-    
-    }
-    // getSongs();
+    const [songs,setSongs] = useState([]);
+    const [loading, setLoading] = useState(0);
 
     useEffect(() => {
         const url='https://q3yhyoo56l.execute-api.us-east-1.amazonaws.com/default/pull_song';
@@ -31,9 +18,11 @@ function Dashboard() {
             body: JSON.stringify(body)
         })
         .then(resp => resp.json())
-        .then(data => setSongs(data.body));
-    })
-    //Need to make this work with the async
+        .then(data => setSongs(data))
+        .then(setLoading(1))
+        .then(console.log('done'))
+    },[loading])
+    //Need to make the delete button work now but the overall dashboard is done
     return(
         <>
             <div>
@@ -47,8 +36,10 @@ function Dashboard() {
                     </Switch>
                 </Router>
                 <ul>
-                    {songs.map((song) => {
-                        <DashboardItem song = {song}></DashboardItem>;
+                    {songs.map((song, index) => {
+                        return(
+                            <DashboardItem key = {index} song = {song}></DashboardItem>
+                        )
                     })}
                 </ul>
             </div>
