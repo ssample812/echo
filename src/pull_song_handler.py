@@ -1,7 +1,7 @@
 import json
 
-from db_client import DDBClient
-from exceptions import NoUserIDException
+from src.db_client import DDBClient
+from src.exceptions import NoUserIDException
 
 
 def pull_song_handler(event, context, client=None):

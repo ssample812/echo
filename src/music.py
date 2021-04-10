@@ -3,7 +3,7 @@ from music21.note import Note, Rest
 from music21.stream import Score
 from music21.tie import Tie
 
-from music_helper import musicxml_to_m21
+from src.music_helper import musicxml_to_m21
 
 
 '''

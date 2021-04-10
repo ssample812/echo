@@ -2,11 +2,12 @@ import json
 
 from botocore.exceptions import ClientError
 
-from db_client import DDBClient
-from exceptions import BadRequestException, NoDataException, NoUserIDException
-from music import (create_blank_song, handle_update_request, rename_song,
-                   update_composer)
-from music_helper import m21_to_musicxml, musicxml_to_m21
+from src.db_client import DDBClient
+from src.exceptions import (BadRequestException, NoDataException,
+                            NoUserIDException)
+from src.music import (create_blank_song, handle_update_request, rename_song,
+                       update_composer)
+from src.music_helper import m21_to_musicxml, musicxml_to_m21
 
 
 def songs_handler(event, context, client=None):
