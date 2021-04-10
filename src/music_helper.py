@@ -5,7 +5,7 @@ from music21.musicxml.xmlToM21 import MusicXMLImporter
 from music21.stream import Score
 
 
-blank_score_file = 'blank_score.musicxml'
+blank_score_file = 'src/blank_score.musicxml'
 
 
 '''
