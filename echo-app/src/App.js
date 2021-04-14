@@ -25,7 +25,7 @@ function App() {
         <Route path='/dashboard'>
           <Dashboard></Dashboard>
         </Route>
-        <Route path='/create'>
+        <Route path='/create/:userid/:itemid'>
           <Create></Create>
         </Route>
         <Route path='/play'>

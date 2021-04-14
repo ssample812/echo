@@ -1,6 +1,8 @@
 import React from 'react'
 import FilePlayer from './Fileplayer'
 
+
+//once rebecca has endpoint for calling midi player add connection
 function Play() {
     return(
         <>
