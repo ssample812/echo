@@ -12,8 +12,8 @@ function DashboardItem(props) {
         <Card className="dashboard-card" style={{ width: '18rem' }}>
             <Card.Body>
                 <Card.Title>{props.song.SongName}</Card.Title>
-                <Router class='dashboard-link' >
-                    <div class="d-flex justify-content-between">
+                <Router className='dashboard-link' >
+                    <div className="d-flex justify-content-between">
                         <Button href="/play"><img alt="Play" src={playImg} height='25em' width='25em'></img> Play</Button>
                             <Switch>
                                 <Route path='/play'>
