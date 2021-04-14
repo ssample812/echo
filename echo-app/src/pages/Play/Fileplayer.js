@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from 'react-bootstrap'
 
 function FilePlayer() {
     
@@ -13,8 +14,8 @@ function FilePlayer() {
     return(
         <>
             <div>
-                <button onClick={start}>Play</button>
-                <button onClick={stop}>Pause</button>
+                <Button onClick={start}>Play</Button>
+                <Button onClick={stop}>Pause</Button>
             </div>
         </>
     );

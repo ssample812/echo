@@ -1,31 +1,39 @@
-import React, {useState} from "react";
+import React from "react";
+import { Button , Card } from 'react-bootstrap'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Create from '../Create/Create'
+import Play from '../Play/Play'
+import playImg from '../../assets/playButton.png'
+
 
 function DashboardItem(props) {
-//Make the delete button actually work now
-const [hidden,setHidden] = useState(true);
-function deleteOnClick(item_id){
-    const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
-    const header = {
-        "user_id": "Jonah Marz",
-        "item_id": item_id
-    }
-    fetch(url, {
-        method: 'DELETE',
-        headers: header
-    })
-    .then(resp => resp.json())
-    .then(data => console.log(data))
-    .then(alert("Song Deleted"))
-    .then(setHidden(false));
-}
-
     return(
         <>
             {hidden ? <li>
                 <h1>Song Title: {props.song.SongName}</h1>
                 <button>Edit</button>
-                <button onClick = {() => deleteOnClick(props.song.item_id)}>Delete</button>
             </li> : null}
+        <Card className="dashboard-card" style={{ width: '18rem' }}>
+            <Card.Body>
+                <Card.Title>{props.song.SongName}</Card.Title>
+                <Router className='dashboard-link' >
+                    <div className="d-flex justify-content-between">
+                        <Button href="/play"><img alt="Play" src={playImg} height='25em' width='25em'></img> Play</Button>
+                            <Switch>
+                                <Route path='/play'>
+                                    <Play></Play>
+                                </Route>
+                            </Switch>
+                        <Button href="/create">Edit</Button>
+                        <Switch>
+                            <Route path='/create'>
+                                <Create></Create>
+                            </Route>
+                        </Switch>
+                    </div>
+                </Router>
+            </Card.Body>
+        </Card>
         </>
     );
 }
