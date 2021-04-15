@@ -57,11 +57,6 @@ def handle_songs_get(db: DDBClient, user_id: str):
 
 
 def handle_songs_post(db: DDBClient, user_id: str):
-    item_id = 1
-    current_songs = db.pull_user_songs(user_id)
-    if len(current_songs) > 0:
-        item_id = current_songs[-1].get("ItemID") + 1
-
     new_song = create_blank_song()
     update_composer(user_id, new_song)
     rename_song("My Song", new_song)
@@ -69,7 +64,6 @@ def handle_songs_post(db: DDBClient, user_id: str):
 
     item_data = {
         'MusicXml': new_musicxml,
-        'ItemID': item_id,
         'UserID': user_id,
         'SongName': 'My Song'
     }

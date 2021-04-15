@@ -9,6 +9,8 @@ import os
 import boto3
 from boto3.dynamodb.conditions import Key
 
+from src.exceptions import NoUserIDException
+
 # Lambda lets us store this as environment variables
 table_name = os.environ.get('table_name')
 
@@ -22,6 +24,12 @@ class DDBClient:
         self.table = table if table else service_resource.Table(table_name)
 
     def push(self, data):
+        user_id = data.get('UserID')
+        if user_id is not None:
+            raise NoUserIDException
+        query_result = self.table.query(KeyConditionExpression=Key('UserID').eq(user_id)).get('Items')
+        recent_num = query_result[-1]['ItemID']+1 if query_result else 0
+        data['ItemID'] = recent_num
         response = self.table.put_item(Item=data)
         return response
 
