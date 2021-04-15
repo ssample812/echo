@@ -33,6 +33,22 @@ h1, .navbar-brand {
     color: #FFFFFF;
 }
 
+.dashboard-card {
+    background-color: #F8BD4F;
+    border-width: 7px;
+}
+
+.btn {
+    border: none;
+    background-color: #FDE2B3;
+    color: #000000;
+}
+.btn:hover, .btn:active {
+    border: none;
+    background-color: #F3712B;
+    color: #000000;
+}
+
 .nav-link, .navbar-brand {
     color: #FFFFFF !important;
 }
