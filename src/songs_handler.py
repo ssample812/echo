@@ -102,4 +102,4 @@ def handle_create_delete(db: DDBClient, user_id: str, item_id: int):
 
 
 def handle_play_get(db: DDBClient, user_id: str, item_id: int):
-    db.pull_user_song(user_id, item_id)
+    return db.pull_user_song(user_id, item_id)
