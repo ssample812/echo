@@ -25,8 +25,8 @@ class DDBClient:
 
     def push(self, data):
         user_id = data.get('UserID')
-        if user_id is not None:
-            raise NoUserIDException
+        if user_id is None:
+            raise NoUserIDException("No UserID")
         query_result = self.table.query(KeyConditionExpression=Key('UserID').eq(user_id)).get('Items')
         recent_num = query_result[-1]['ItemID']+1 if query_result else 0
         data['ItemID'] = recent_num
