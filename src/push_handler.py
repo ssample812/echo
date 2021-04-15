@@ -1,6 +1,8 @@
-from db_client.db_client import DDBClient
 import json
+
+from src.db_client import DDBClient
 from src.db_client.exceptions import NoDataException
+
 
 def push_handler(event, context, client = None):
     event_json = json.loads(event)
