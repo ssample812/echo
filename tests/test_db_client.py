@@ -13,7 +13,7 @@ class DDBClientTests(unittest.TestCase):
     def test_push(self):
         data = {"doesnt matter":"dummy data", "UserID": "hello"}
         self.test_client.table.put_item.return_value = "response"
-        self.test_client.table.query.return_value = [{'ItemID':0}]
+        self.test_client.table.query.return_value = {'Items':[{'ItemID':0}]}
         res = self.test_client.push(data) 
         assert (res == "response")
         
