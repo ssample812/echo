@@ -9,7 +9,7 @@ import os
 import boto3
 from boto3.dynamodb.conditions import Key
 
-from src.exceptionsexceptions import NoUserIDException
+from src.exceptions import NoUserIDException
 
 # Lambda lets us store this as environment variables
 table_name = os.environ.get('table_name')
