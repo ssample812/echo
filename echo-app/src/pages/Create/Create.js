@@ -1,9 +1,8 @@
 import React, {useEffect,useState} from 'react'
 import { Button } from 'react-bootstrap'
-import {BrowserRouter as Router, Link, Route, Switch,useParams} from 'react-router-dom'
-import Play from '../Play/Play'
+import {useParams} from 'react-router-dom'
 
-function Create(props) {
+function Create() {
 
     function deleteOnClick(item_id){
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
@@ -34,8 +33,6 @@ function Create(props) {
         .then(console.log('done'))
         .then(console.log(song))
     },[])
-    // const {params} = useRouteMatch('/create/:user_id');
-    // add the call to pull the passed user id and item id.. check email from Sam
 
     return(
         <>
@@ -43,15 +40,8 @@ function Create(props) {
             <div className="card border border-dark">
                 <div className="card-body">
                 <h1>{song.SongName}</h1>
-                    <Router>
-                        <Button href='/play'>Play</Button>
-                        <Button onClick = {() => deleteOnClick(song.ItemID)}>Delete</Button>]
-                        <Switch>
-                            <Route path='/play'>
-                                <Play></Play>
-                            </Route>
-                        </Switch>
-                    </Router>
+                    <Button href='/play'>Play</Button>
+                    <Button onClick = {() => deleteOnClick(song.ItemID)}>Delete</Button>]
                 </div>
             </div>
         </div>

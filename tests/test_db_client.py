@@ -11,11 +11,11 @@ class DDBClientTests(unittest.TestCase):
         self.test_client = DDBClient(mockResource,mockTable)
     
     def test_push(self):
-        # data = {"doesnt matter":"dummy data", "UserID": "hello"}
-        # self.test_client.table.put_item.return_value = "response"
-        # res = self.test_client.push(data) 
-        # assert (res == "response")
-        assert(True)
+        data = {"doesnt matter":"dummy data", "UserID": "hello"}
+        self.test_client.table.put_item.return_value = "response"
+        self.test_client.table.query.return_value = [{'ItemID':0}]
+        res = self.test_client.push(data) 
+        assert (res == "response")
         
     #Im only testing one pull function because they do the same thing :)
     def test_pull(self):
