@@ -12,11 +12,11 @@ function Dashboard() {
     const [loading, setLoading] = useState(0);
 
     useEffect(() => {
-        const url='https://q3yhyoo56l.execute-api.us-east-1.amazonaws.com/default/pull_song';
-        const body = {"user_id": "Jonah Marz"}
+        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs';
+        const header = {"userid": "Jonah Marz"};
         fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(body)
+            method: 'GET',
+            headers: header
         })
         .then(resp => resp.json())
         .then(data => setSongs(data))
@@ -44,7 +44,5 @@ function Dashboard() {
         </>
     );
 }
-
-
 
 export default Dashboard;
