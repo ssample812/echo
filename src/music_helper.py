@@ -1,4 +1,3 @@
-# import os
 import xml.etree.ElementTree as ET
 
 from music21.musicxml.m21ToXml import GeneralObjectExporter
@@ -6,9 +5,7 @@ from music21.musicxml.xmlToM21 import MusicXMLImporter
 from music21.stream import Score
 
 
-# Temporary variables for path, will need to change for the Lambda
-# default_path = "/Users/samanthasample/Documents/College/Capstone/echo/src"
-blank_score_file = 'blank_score.musicxml'
+blank_score_file = 'src/blank_score.musicxml'
 
 
 '''
@@ -34,27 +31,12 @@ Creates a musicXML string from a music21 Score object
 :param score: :class:`music23.stream.Score` object
 :return: musicXML string
 '''
-def m21_to_musicxml(score: Score) -> str:
-    goe = GeneralObjectExporter()
-
+def m21_to_musicxml(score: Score = None) -> str:
     if not score:
         with open(blank_score_file) as f:
             return f.read()
 
-    musicxml = goe.fromScore(score)
-    return musicxml
-
-
-
-# Temporary Testing
-
-
-#I am commenting this out for the purpose of fixing the build...
-# os.chdir(default_path)
-
-# score = Score()
-# print(m21_to_musicxml(score))
-
-# with open(blank_score_file) as f:
-#     music_xml = f.read()
-#     print(musicxml_to_m21(music_xml))
+    goe = GeneralObjectExporter(score)
+    byte_str = goe.parse()
+    xml_str = byte_str.decode('utf-8').strip()
+    return xml_str

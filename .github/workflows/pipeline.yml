@@ -70,28 +70,57 @@ jobs:
           project_name: Echo
           runtime: python3.9
           
-    # Zip functions to deploy to lambda
-      - name: Zip functions
-        run: |
-          zip -r pull_song.zip ./pull_song_handler.py ./db_client.py ./exceptions.py
-          zip -r pull_user.zip ./pull_user_handler.py ./db_client.py ./exceptions.py
-          zip -r push.zip ./push_handler.py ./db_client.py ./exceptions.py
+    # Zip things
+      - name: Zip pull song
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./pull_song.zip src/pull_song_handler.py src/db_client.py src/exceptions.py
+      - name: Zip pull account
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./pull_account.zip src/pull_user_handler.py src/db_client.py src/exceptions.py
+      - name: Zip push data
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./push_data.zip src/push_handler.py src/db_client.py src/exceptions.py
+      - name: Zip songs
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./songs.zip src/songs_handler.py src/db_client.py src/exceptions.py src/music.py src/music_helper.py src/blank_score.musicxml
           
     # Deploy to AWS
-      - name: AWS Lambda Deploy pull_song
-        uses: appleboy/lambda-action@v0.0.4
+      - name: Deploy to pull_song lambda
+        uses: appleboy/lambda-action@v0.1.3
         with:
-            #name of my AWS Lambda Function
-            function_name: pull_song
-            #contains all the files for the lambda
-            zip_file: pull_song.zip
-      - name: AWS Lambda Deploy pull_account
-        uses: appleboy/lambda-action@v0.0.4
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: pull_song
+          zip_file: pull_song.zip
+          
+      - name: Deploy to pull_account lambda
+        uses: appleboy/lambda-action@v0.1.3
         with:
-            function_name: pull_account
-            zip_file: pull_user.zip
-      - name: AWS Lambda Deploy push
-        uses: appleboy/lambda-action@v0.0.4
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: pull_account
+          zip_file: pull_account.zip
+          
+      - name: Deploy to push_data lambda
+        uses: appleboy/lambda-action@v0.1.3
         with:
-            function_name: push_data
-            zip_file: push.zip
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: push_data
+          zip_file: push_data.zip
+
+      - name: Deploy to songs lambda
+        uses: appleboy/lambda-action@v0.1.3
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: songs
+          zip_file: songs.zip
