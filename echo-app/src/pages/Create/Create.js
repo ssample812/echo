@@ -4,23 +4,19 @@ import {useParams} from 'react-router-dom'
 
 function Create() {
 
-    function deleteOnClick(item_id){
+    const params = useParams()
+    const [song,setSong] = useState({})
+
+    function deleteOnClick(){
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
-        const header = {
-            "user_id": "Jonah Marz",
-            "item_id": item_id
-        }
         fetch(url, {
             method: 'DELETE',
-            headers: header
+            headers: params
         })
         .then(resp => resp.json())
         .then(data => console.log(data))
         .then(alert("Song Deleted"))    
     }
-
-    const params = useParams()
-    const [song,setSong] = useState({})
         
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
@@ -41,7 +37,7 @@ function Create() {
                 <div className="card-body">
                 <h1>{song.SongName}</h1>
                     <Button href='/play'>Play</Button>
-                    <Button onClick = {() => deleteOnClick(song.ItemID)}>Delete</Button>]
+                    <Button onClick = {() => deleteOnClick()}>Delete</Button>]
                 </div>
             </div>
         </div>
