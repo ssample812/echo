@@ -32,7 +32,6 @@ function Create() {
         .then(resp => resp.json())
         .then(data => setSong(data[0]))
         .then(console.log('done'))
-        .then(console.log(song))
     },[])
 
     return(

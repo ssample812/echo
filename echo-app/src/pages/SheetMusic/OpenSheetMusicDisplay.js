@@ -1,48 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import { OpenSheetMusicDisplay as OSMD } from 'opensheetmusicdisplay';
-import { Spinner } from 'react-bootstrap'
 
-function OpenSheetMusicDisplay(props) {
-    const [musicXml,setMusic] = useState("")
-    const options = {
-      drawTitle: false,
+class OpenSheetMusicDisplay extends Component {
+    constructor(props) {
+      super(props);
+      this.state = { dataReady: false };
+      this.osmd = undefined;
+      this.divRef = React.createRef();
     }
-    var divRef = React.createRef();
-    var osmd = new OSMD(divRef.current, options);
-
-
-    function setupOsmd() {
-      osmd.load(musicXml).then(() => render());
-
+  
+    setupOsmd() {
+      console.log(this.props.music);
+      const options = {
+        autoResize: this.props.autoResize !== undefined ? this.props.autoResize : true,
+        drawTitle: this.props.drawTitle !== undefined ? this.props.drawTitle : true,
+      }
+      this.osmd = new OSMD(this.divRef.current, options);
+      if(this.props.music){
+        this.osmd.load(this.props.music).then(() => this.osmd.render());
+      }
     }
-
-    useEffect(() => {
-      setMusic(props.music)
-));
-    },[])
-
-    // function resize() {
-    //   this.forceUpdate();
-    // }
   
-    // function componentWillUnmount() {
-    //   window.removeEventListener('resize', this.resize)
-    // }
-  
-    // // Called after render
-    // componentDidMount() {
-    //   this.setupOsmd();
-    // }
-  
-    function render() {
-      return (<div ref={divRef} />);
+    resize() {
+      this.forceUpdate();
     }
-
-    // renderSpinner() {
-    //   return (<Spinner animation="border" role="status">
-    //   <span className="sr-only">Loading...</span>
-    // </Spinner>);
-    // }
+  
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.resize)
+    }
+  
+    componentDidUpdate(prevProps) {
+      if (this.props.drawTitle !== prevProps.drawTitle) {
+        this.setupOsmd();
+      } else {
+        if(this.props.music){
+          this.osmd.load(this.props.music).then(() => this.osmd.render());
+        }
+      }
+      window.addEventListener('resize', this.resize)
+    }
+  
+    // Called after render
+    componentDidMount() {
+      this.setupOsmd();
+    }
+  
+    render() {
+      return (<div ref={this.divRef} />);
+    }
   }
 
   export default OpenSheetMusicDisplay;
