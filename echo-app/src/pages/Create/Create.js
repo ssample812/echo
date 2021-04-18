@@ -1,12 +1,16 @@
 import React, {useEffect,useState} from 'react'
 import { Button } from 'react-bootstrap'
 import {useParams} from 'react-router-dom'
+import { getToken } from '../../auth/AuthAction'
+import { useAuth } from '../../auth/AuthState'
 import OpenSheetMusicDisplay from '../SheetMusic/OpenSheetMusicDisplay'
 
 function Create() {
 
     const params = useParams()
     const [song,setSong] = useState({})
+    const [ authState, _ ] = useAuth()
+    params["Authorization"] = getToken()
 
     function deleteOnClick(){
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
