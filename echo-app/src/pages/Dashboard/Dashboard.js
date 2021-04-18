@@ -22,6 +22,15 @@ function Dashboard() {
         .then(data => setSongs(data))
         .then(setLoading(1))
         .then(console.log('done'))
+        
+        const new_url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/user';
+        fetch(new_url, {
+        method: 'GET',
+        headers: header
+        })
+        .then(resp => resp.json())
+        //from here "data" is what the endpoint returned so go crazy
+        .then(data => console.log(data))
     },[loading])
     //Need to make the delete button work now but the overall dashboard is done
     //add create button to dashboard page
@@ -46,3 +55,5 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
