@@ -7,7 +7,7 @@ from src.exceptions import (BadRequestException, NoDataException,
                             NoUserIDException)
 from src.music import (create_blank_song, handle_update_request, rename_song,
                        update_composer)
-from src.music_helper import m21_to_musicxml, musicxml_to_m21
+from src.music_helper import m21_to_musicxml, musicxml_to_m21, musicxml_to_midi
 
 
 def songs_handler(event, context, client=None):
@@ -102,4 +102,6 @@ def handle_create_delete(db: DDBClient, user_id: str, item_id: int):
 
 
 def handle_play_get(db: DDBClient, user_id: str, item_id: int):
-    return db.pull_user_song(user_id, item_id)
+    db_response = db.pull_user_song(user_id, item_id)
+    music_xml = db_response[0].get("MusicXml")
+    midi_file = musicxml_to_midi(music_xml)
