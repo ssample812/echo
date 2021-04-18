@@ -1,6 +1,6 @@
 import jwt from 'jwt-decode';
 
-export const cognitoLogin = `https://echoauth.auth.us-east-1.amazoncognito.com/login?client_id=2njfth8st77u6ku1v10gb3318n&response_type=token&scope=email+profile+openid&redirect_uri=${window.location.origin}`;
+export const cognitoLogin = `https://echoauth.auth.us-east-1.amazoncognito.com/login?client_id=2njfth8st77u6ku1v10gb3318n&response_type=token&scope=email+profile+openid&redirect_uri=https://main.d18d22pkhjatt9.amplifyapp.com/dashboard`;
 
 export const pullUrlParams = dispatch => {
     const searchStr = window.location.hash;
