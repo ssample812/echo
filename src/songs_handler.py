@@ -50,7 +50,9 @@ def songs_handler(event, context, client=None):
 
     if path == '/songs/play' and http_method == 'GET':
         return handle_play_get(ddb_client, user_id, item_id)
-
+    
+    if path == '/songs/user' and http_method == 'GET':
+        return handle_user_get(ddb_client, user_id)
 
 def handle_songs_get(db: DDBClient, user_id: str):
     return db.pull_user_songs(user_id)
@@ -103,3 +105,6 @@ def handle_create_delete(db: DDBClient, user_id: str, item_id: int):
 
 def handle_play_get(db: DDBClient, user_id: str, item_id: int):
     return db.pull_user_song(user_id, item_id)
+
+def handle_user_get(db: DDBClient, user_id: str):
+    return db.pull_user_account(user_id)
