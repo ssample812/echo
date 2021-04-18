@@ -118,8 +118,7 @@ def handle_play_get(db: DDBClient, user_id: str, item_id: int):
     db_response = db.pull_user_song(user_id, item_id)
     music_xml = db_response[0].get("MusicXml")
     midi_file = musicxml_to_midi(music_xml)
-    return db.pull_user_song(user_id, item_id)
-
+    return midi_file
 
 def handle_user_get(db: DDBClient, user_id: str):
     return db.pull_user_account(user_id)

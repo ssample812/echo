@@ -6,7 +6,6 @@ from music21.stream import Score
 from music21.midi.translate import streamToMidiFile
 from music21.midi import MidiFile
 from midi2audio import FluidSynth
-from pydub import AudioSegment
 
 
 blank_score_file = 'src/blank_score.musicxml'
