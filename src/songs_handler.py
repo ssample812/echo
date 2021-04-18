@@ -51,7 +51,7 @@ def songs_handler(event, context, client=None):
     if path == '/songs/play' and http_method == 'GET':
         return handle_play_get(ddb_client, user_id, item_id)
     
-    if path == '/songs/user' and http_method == 'GET':
+    if path == '/user' and http_method == 'GET':
         return handle_user_get(ddb_client, user_id)
 
 def handle_songs_get(db: DDBClient, user_id: str):
