@@ -37,6 +37,15 @@ def songs_handler(event, context, client=None):
     if path == '/user' and http_method == 'GET':
         return handle_user_get(ddb_client, user_id)
 
+    if path == '/user' and http_method == 'POST':
+        try:
+            escaped_body = event.get('body')
+            request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
+            request_dict = json.loads(request_body)
+        except Exception:
+            raise BadRequestException('Bad request body')
+        return handle_user_post(ddb_client, user_id, request_dict)
+
     item_id = event.get('headers').get('itemid')
     if not item_id:
         raise BadRequestException('No item id given')
@@ -122,3 +131,15 @@ def handle_play_get(db: DDBClient, user_id: str, item_id: int):
 
 def handle_user_get(db: DDBClient, user_id: str):
     return db.pull_user_account(user_id)
+
+
+def handle_user_post(db: DDBClient, user_id: str, request: dict):
+    nickname = request.get('nickname')
+    if nickname is None:
+        raise BadRequestException("Request body missing nickname")
+
+    item_data = {
+        'UserID': user_id,
+        'Nickname': nickname
+    }
+    return db.push(item_data)
