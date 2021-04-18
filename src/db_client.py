@@ -49,7 +49,7 @@ class DDBClient:
         response = self.table.query(
             KeyConditionExpression=Key('UserID').eq(user_id) & Key('ItemID').eq(0)
         )
-        return response['Items']
+        return response['Items'][0]
 
     def delete_song(self, user_id, item_id):
         response = self.table.delete_item(Key={'UserID': user_id, 'ItemID': item_id})
