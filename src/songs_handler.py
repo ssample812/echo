@@ -26,7 +26,16 @@ def songs_handler(event, context, client=None):
         return handle_songs_get(ddb_client, user_id)
 
     if path == '/songs' and http_method == 'POST':
-        return handle_songs_post(ddb_client, user_id)
+        try:
+            escaped_body = event.get('body')
+            request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
+            request_dict = json.loads(request_body)
+        except Exception:
+            raise BadRequestException('Bad request body')
+        return handle_songs_post(ddb_client, user_id, request_dict)
+
+    if path == '/user' and http_method == 'GET':
+        return handle_user_get(ddb_client, user_id)
 
     item_id = event.get('headers').get('itemid')
     if not item_id:
@@ -56,9 +65,13 @@ def handle_songs_get(db: DDBClient, user_id: str):
     return db.pull_user_songs(user_id)
 
 
-def handle_songs_post(db: DDBClient, user_id: str):
+def handle_songs_post(db: DDBClient, user_id: str, request: dict):
+    nickname = request.get('nickname')
+    if nickname is None:
+        raise BadRequestException("Request body missing nickname")
+
     new_song = create_blank_song()
-    update_composer(user_id, new_song)
+    update_composer(nickname, new_song)
     rename_song("My Song", new_song)
     new_musicxml = m21_to_musicxml(new_song)
 
@@ -105,3 +118,8 @@ def handle_play_get(db: DDBClient, user_id: str, item_id: int):
     db_response = db.pull_user_song(user_id, item_id)
     music_xml = db_response[0].get("MusicXml")
     midi_file = musicxml_to_midi(music_xml)
+    return db.pull_user_song(user_id, item_id)
+
+
+def handle_user_get(db: DDBClient, user_id: str):
+    return db.pull_user_account(user_id)

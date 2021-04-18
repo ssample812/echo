@@ -27,9 +27,10 @@ class DDBClient:
         user_id = data.get('UserID')
         if user_id is None:
             raise NoUserIDException("No UserID")
-        query_result = self.table.query(KeyConditionExpression=Key('UserID').eq(user_id)).get('Items')
-        recent_num = query_result[-1]['ItemID']+1 if query_result else 0
-        data['ItemID'] = recent_num
+        if data.get('ItemID') is None:
+            query_result = self.table.query(KeyConditionExpression=Key('UserID').eq(user_id)).get('Items')
+            recent_num = query_result[-1]['ItemID']+1 if query_result else 0
+            data['ItemID'] = recent_num
         response = self.table.put_item(Item=data)
         return response
 
@@ -49,7 +50,7 @@ class DDBClient:
         response = self.table.query(
             KeyConditionExpression=Key('UserID').eq(user_id) & Key('ItemID').eq(0)
         )
-        return response['Items']
+        return response['Items'][0]
 
     def delete_song(self, user_id, item_id):
         response = self.table.delete_item(Key={'UserID': user_id, 'ItemID': item_id})
