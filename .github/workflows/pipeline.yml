@@ -87,6 +87,10 @@ jobs:
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./songs.zip src/songs_handler.py src/db_client.py src/exceptions.py src/music.py src/music_helper.py src/blank_score.musicxml
+      - name: Zip push account
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./push_account.zip src/push_account_handler.py src/db_client.py src/exceptions.py
           
     # Deploy to AWS
       - name: Deploy to pull_song lambda
@@ -124,3 +128,12 @@ jobs:
           aws_region: us-east-1
           function_name: songs
           zip_file: songs.zip
+    
+      - name: Deploy to push_account lambda
+        uses: appleboy/lambda-action@v0.1.3
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: us-east-1
+          function_name: push_account
+          zip_file: push_account.zip
