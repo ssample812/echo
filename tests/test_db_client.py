@@ -19,7 +19,7 @@ class DDBClientTests(unittest.TestCase):
         
     #Im only testing one pull function because they do the same thing :)
     def test_pull(self):
-        return_data = {"data": 1}
-        self.test_client.table.query.return_value = {'Items':return_data}
-        assert(self.test_client.pull_user_account('uid') == return_data)
+        return_data = [{"data": 1}]
+        self.test_client.table.query.return_value = {'Items': return_data}
+        assert(self.test_client.pull_user_account('uid') == return_data[0])
         assert(self.test_client.pull_user_songs('uid') == return_data)
