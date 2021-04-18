@@ -13,7 +13,10 @@ function Dashboard() {
 
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs';
-        const header = {"userid": "Jonah Marz"};
+        const header = {
+            "userid": "Jonah Marz",
+            "Authorization": "jwt"
+        };
         fetch(url, {
             method: 'GET',
             headers: header
