@@ -23,12 +23,13 @@ h1, .navbar-brand {
     background-color: #33658A;
 }
 
-.nav button {
+.nav .auth-button {
     border: none;
     background-color: #F8BD4F;
     color: #FFFFFF;
+    border-radius: 5px;
 }
-.nav button:hover {
+.nav .auth-button:hover {
     background-color: #F3712B;
     color: #FFFFFF;
 }
