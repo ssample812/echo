@@ -1,6 +1,8 @@
 import React, {useEffect,useState} from 'react'
 import { Button, Form } from 'react-bootstrap'
 import {useParams} from 'react-router-dom'
+import { getToken } from '../../auth/AuthAction'
+import { useAuth } from '../../auth/AuthState'
 import OpenSheetMusicDisplay from '../SheetMusic/OpenSheetMusicDisplay'
 
 function Create() {
@@ -20,6 +22,8 @@ function Create() {
     const [restLen, setRestLen] = useState('whole')
     // variables for title form
     const [title, setTitle] = useState("")
+    const [ authState, _ ] = useAuth()
+    params["Authorization"] = getToken()
 
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';

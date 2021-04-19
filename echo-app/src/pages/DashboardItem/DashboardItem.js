@@ -1,9 +1,13 @@
 import React from "react";
 import { Button , Card } from 'react-bootstrap'
 import playImg from '../../assets/playButton.png'
+import { useAuth } from '../../auth/AuthState'
 
 
 function DashboardItem(props) {
+    const [ authState, _ ] = useAuth();
+    const userId = authState.userId
+
     return(
         <>
         <Card className="dashboard-card" style={{ width: '18rem' }}>
