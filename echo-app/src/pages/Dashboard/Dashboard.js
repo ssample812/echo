@@ -18,8 +18,8 @@ function Dashboard() {
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs';
         const header = {
-            "userid": authState.userid,
-            "Authorization": getToken()
+            "userid": authState.user.sub,
+            "authorization": getToken()
         };
         fetch(url, {
             method: 'GET',
