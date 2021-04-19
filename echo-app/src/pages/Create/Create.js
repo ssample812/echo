@@ -23,7 +23,7 @@ function Create() {
     // variables for title form
     const [title, setTitle] = useState("")
     const [ authState, _ ] = useAuth()
-    params["Authorization"] = getToken()
+    params["authorization"] = getToken()
 
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';

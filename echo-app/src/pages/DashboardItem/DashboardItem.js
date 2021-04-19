@@ -6,7 +6,7 @@ import { useAuth } from '../../auth/AuthState'
 
 function DashboardItem(props) {
     const [ authState, _ ] = useAuth();
-    const userId = authState.userId
+    const userId = authState.user.sub;
 
     return(
         <>
@@ -15,7 +15,7 @@ function DashboardItem(props) {
                 <Card.Title>{props.song.SongName}</Card.Title>
                     <div className="d-flex justify-content-between">
                         <Button href="/play"><img alt="Play" src={playImg} height='25em' width='25em'></img> Play</Button>
-                        <Button href={'/create'+'/'+"Jonah Marz"+'/'+props.song.ItemID}>Edit</Button>
+                        <Button href={'/create/'+userId+'/'+props.song.ItemID}>Edit</Button>
                     </div>
             </Card.Body>
         </Card>
