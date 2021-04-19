@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import { CardColumns } from 'react-bootstrap'
+import { Button, Card, CardColumns } from 'react-bootstrap'
 import {BrowserRouter as Router,Switch,Route,Link, Redirect} from 'react-router-dom'
 import DashboardItem from '../DashboardItem/DashboardItem'
 import { useAuth } from '../../auth/AuthState'
@@ -30,8 +30,7 @@ function Dashboard() {
         .then(setLoading(1))
         .then(console.log('done'))
     },[loading])
-    //Need to make the delete button work now but the overall dashboard is done
-    //add create button to dashboard page
+
     return(
         <>
         <div className="container">
@@ -45,6 +44,11 @@ function Dashboard() {
                                 <DashboardItem key = {index} song = {song}></DashboardItem>
                             )
                         })}
+                        <Card className="dashboard-card d-flex align-items-center justify-content-center" style={{ width: '18rem', height: '8rem'}}>
+                            <Card.Body className="dashboard-card d-flex align-items-center">
+                                <Button size="lg" >New Song</Button>
+                            </Card.Body>
+                        </Card>
                     </CardColumns>
                 </div>
                 :
