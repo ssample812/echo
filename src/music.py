@@ -217,10 +217,13 @@ def handle_update_request(request_dict: dict, my_song: Score) -> Score:
         print(my_song.metadata.title)
 
     if 'note' in request_dict:
-        pitch = request_dict.get('note').get('pitch')
-        duration = (float)(request_dict.get('note').get('duration'))
-        position = (float)(request_dict.get('note').get('position'))
-
-        insert_note(my_song, pitch, duration, position)
+        notes = request_dict.get('note')
+        if not isinstance(notes, list):
+            notes = [notes]
+        for note in notes:
+            pitch = note.get('pitch')
+            duration = (float)(note.get('duration'))
+            position = (float)(note.get('position'))
+            insert_note(my_song, pitch, duration, position)
 
     return my_song

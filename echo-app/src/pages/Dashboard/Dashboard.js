@@ -2,6 +2,9 @@ import React, {useState,useEffect} from 'react'
 import { CardColumns } from 'react-bootstrap'
 import {BrowserRouter as Router,Switch,Route,Link, Redirect} from 'react-router-dom'
 import DashboardItem from '../DashboardItem/DashboardItem'
+import { useAuth } from '../../auth/AuthState'
+import { getToken, isLoggedIn } from '../../auth/AuthAction'
+import LoginError from '../Auth/LoginError'
 import Play from '../Play/Play'
 
 
@@ -10,10 +13,14 @@ import Play from '../Play/Play'
 function Dashboard() {
     const [songs,setSongs] = useState([]);
     const [loading, setLoading] = useState(0);
+    const [ authState, _ ] = useAuth();
 
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs';
-        const header = {"userid": "Jonah Marz"};
+        const header = {
+            "userid": authState.userid,
+            "Authorization": getToken()
+        };
         fetch(url, {
             method: 'GET',
             headers: header
@@ -29,6 +36,7 @@ function Dashboard() {
         <>
         <div className="container">
             <div className="card border border-dark">
+                {isLoggedIn(authState) ? 
                 <div className="card-body">
                     <h1>Dashboard</h1>
                     <CardColumns>
@@ -39,6 +47,11 @@ function Dashboard() {
                         })}
                     </CardColumns>
                 </div>
+                :
+                <div className="card-body">
+                    <LoginError pageTitle="Dashboard"></LoginError>
+                </div>
+                }
             </div>
         </div>
         </>
