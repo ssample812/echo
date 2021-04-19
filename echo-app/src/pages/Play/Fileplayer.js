@@ -1,65 +1,54 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { Button } from 'react-bootstrap'
-import {useParams} from 'react-router-dom'
+import {getToken} from '../../auth/AuthAction'
 
 function FilePlayer() {
     
     var MIDIPlayer = require('midiplayer');
     var MIDIFile = require('midifile');
 
-    const params = useParams();
-
-    navigator.requestMIDIAccess().then(function(midiAccess) {
-        var midiPlayer = new MIDIPlayer({
-            'output': midiAccess.outputs()[0]
-        });
-        // call stuff to get the musicxml as midi
-        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
-        fetch(url, {
-            method: 'GET',
-            headers: params
-        })
-        .then(resp => resp.json())
-        .then(data => console.log(data))
+    const [statevar, setStateVar] = useState({});
+    const params = {
+        "userid": "Jonah Marz",
+        "itemid": "3",
+        "Authorization": getToken()
+    }
+    const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
+    fetch(url, {
+        method: 'GET',
+        headers: params
     })
-        /*
-        var midiFile = new MIDIFile();
+    .then(resp => resp.json())
+    .then(data => setStateVar(data[0]))
 
-        midiPlayer.load(midiFile);
+    if(statevar != {}) {
+        console.log(statevar);
+    }
 
-        // may need to add some adjustments to have an actual pause
-        const start = () => {
-            midiPlayer.play()
-        }
-        const stop = () => {
-            midiPlayer.pause()
-        }
-        return(
-            <>
-                <div>
-                    <Button onClick={start}>Play</Button>
-                    <Button onClick={stop}>Pause</Button>
-                </div>
-            </>
-        );
-    })*/
-    
-    let audio = new Audio("https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3")
-
+    // may need to add some adjustments to have an actual pause
     const start = () => {
-        audio.play()
+        navigator.requestMIDIAccess().then(function(midiAccess) {
+            var midiPlayer = new MIDIPlayer({
+                'output': Array.from(midiAccess.outputs)[0]
+            });
+            var midiFile = new MIDIFile(statevar);
+            midiPlayer.load(midiFile);
+            midiPlayer.play(function playCallback() {
+                midiPlayer.play(playCallback);
+            });
+        })
     }
     const stop = () => {
-        audio.pause()
     }
-    return(
-        <>
-            <div>
-                <Button onClick={start}>Play</Button>
-                <Button onClick={stop}>Pause</Button>
-            </div>
-        </>
-    );
+
+return(
+    <>
+        <div>
+            <Button onClick={start}>Play</Button>
+            <Button onClick={stop}>Pause</Button>
+        </div>
+    </>
+);
 }
 
 export default FilePlayer;
