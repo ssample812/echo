@@ -10,9 +10,118 @@ function Create() {
     const [noteSelected, setNoteSelected] = useState(0);
     const [restSelected, setRestSelected] = useState(0);
     // variables for add note
+    const [noteMeasure, setNoteMeasure] = useState('1')
+    const [noteBeat, setNoteBeat] = useState('1')
+    const [notePitch, setNotePitch] = useState('C5')
+    const [noteLen, setNoteLen] = useState('whole')
     // variables for add rest
+    const [restMeasure, setRestMeasure] = useState('1')
+    const [restBeat, setRestBeat] = useState('1')
+    const [restLen, setRestLen] = useState('whole')
     // variables for title form
     const [title, setTitle] = useState("")
+
+    useEffect(() => {
+        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
+        fetch(url, {
+            method: 'GET',
+            headers: params
+        })
+        .then(resp => resp.json())
+        .then(data => setSong(data[0]))
+        .then(console.log('done'))
+    },[])
+
+
+    /** Set length options based on beat number */
+    const lengths = ["whole", "half", "quarter", "8th"]
+    const lengthsDict = {"whole":4, "half":2, "quarter":1, "8th":0.5}
+    let noteType = lengths;
+    let noteOptions = null;
+    let restType = lengths;
+    let restOptions = null;
+
+    const changeNoteOptionHandler = (event) => {
+        setNoteSelected(event.target.value);
+    };
+    const changeRestOptionHandler = (event) => {
+        setRestSelected(event.target.value);
+    };
+
+    if (noteSelected == 2 || noteSelected == 3) {
+        noteType = lengths.slice(1)
+    } else if (noteSelected == 4) {
+        noteType = lengths.slice(2)
+    }
+    if (noteType) {
+        noteOptions = noteType.map((el) => <option>{el}</option>);
+    }
+
+    if (restSelected == 2 || restSelected == 3) {
+        restType = lengths.slice(1)
+    } else if (restSelected == 4) {
+        restType = lengths.slice(2)
+    }
+    if (restType) {
+        restOptions = restType.map((el) => <option>{el}</option>);
+    }
+
+    
+    function handleNewTitle(e) {
+        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
+        const body={"title": title};
+        fetch(url, {
+            method: 'PUT',
+            headers: params,
+            body: JSON.stringify(body)
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data[0])
+            setSong(data[0])
+        })
+        e.preventDefault()
+    }
+
+    function handleNewNote(e) {
+        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
+        const position = (parseFloat(noteMeasure)-1) * 4 + (parseFloat(noteBeat)-1)
+        const len = lengthsDict[noteLen]
+        let body={"note": {"pitch": notePitch, "position": position, "duration": len}};
+        if (noteLen == '8th') {
+            body={"note": [{"pitch": notePitch, "position": position, "duration": len}, {"pitch": notePitch, "position": position+0.5, "duration": len}]};
+        }
+
+        fetch(url, {
+            method: 'PUT',
+            headers: params,
+            body: JSON.stringify(body)
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data[0])
+            setSong(data[0])
+        })
+        e.preventDefault()
+    }
+
+    function handleNewRest(e) {
+        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
+        const position = (parseFloat(restMeasure)-1) * 4 + (parseFloat(restBeat)-1)
+        const len = lengthsDict[restLen]
+        const body={"note": {"pitch": "R", "position": position, "duration": len}};
+        fetch(url, {
+            method: 'PUT',
+            headers: params,
+            body: JSON.stringify(body)
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data[0])
+            setSong(data[0])
+        })
+        e.preventDefault()
+    }
 
     function clearOnClick(){
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
@@ -37,69 +146,8 @@ function Create() {
         })
         .then(resp => resp.json())
         .then(data => console.log(data))
-        .then(alert("Song Deleted"))    
+        .then(alert("Song Deleted"))
     }
-
-    useEffect(() => {
-        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
-        fetch(url, {
-            method: 'GET',
-            headers: params
-        })
-        .then(resp => resp.json())
-        .then(data => setSong(data[0]))
-        .then(console.log('done'))
-    },[])
-
-    /** Set length options based on beat number */
-    const lengths = [("whole", 4), ("half", 2), ("quarter", 1), ("8th", 0.5)]
-    let noteType = lengths;
-    let noteOptions = null;
-    let restType = lengths;
-    let restOptions = null;
-
-    const changeNoteOptionHandler = (event) => {
-        setNoteSelected(event.target.value);
-    };
-    const changeRestOptionHandler = (event) => {
-        setRestSelected(event.target.value);
-    };
-
-    if (noteSelected == 2 || noteSelected == 3) {
-        noteType = lengths.slice(1)
-    } else if (noteSelected == 4) {
-        noteType = lengths.slice(2)
-    }
-    if (noteType) {
-        noteOptions = noteType.map((el) => <option key={el}>{el}</option>);
-    }
-
-    if (restSelected == 2 || restSelected == 3) {
-        restType = lengths.slice(1)
-    } else if (restSelected == 4) {
-        restType = lengths.slice(2)
-    }
-    if (restType) {
-        restOptions = restType.map((el) => <option key={el}>{el}</option>);
-    }
-
-    
-    function handleNewTitle(e) {
-        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
-        const body={"title": title};
-        fetch(url, {
-            method: 'PUT',
-            headers: params,
-            body: JSON.stringify(body)
-        })
-        .then(resp => resp.json())
-        .then(data => {
-            console.log(data[0])
-            setSong(data[0])
-        })
-        e.preventDefault()
-    }
-
 
     return(
         <>
@@ -110,44 +158,45 @@ function Create() {
                     <OpenSheetMusicDisplay music={song.MusicXml} />
                     <div>
                     <h5>Add a new note:</h5>
-                    <Form inline>
-                        <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">
+                    <Form inline onSubmit= {e => handleNewNote(e)}>
+                        <Form.Label className="my-1 mr-2">
                             Measure:
                         </Form.Label>
                         <Form.Control
                             as="select"
                             className="my-1 mr-sm-2"
-                            id="inlineFormCustomSelectPref"
                             custom
+                            onChange={e => setNoteMeasure(e.target.value)}
                         >
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
                             <option>4</option>
                         </Form.Control>
-                        <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">
+                        <Form.Label className="my-1 mr-2">
                             Beat:
                         </Form.Label>
                         <Form.Control
                             as="select"
                             className="my-1 mr-sm-2"
-                            id="inlineFormCustomSelectPref"
                             custom
-                            onChange={changeNoteOptionHandler}
+                            onChange={e => {
+                                changeNoteOptionHandler(e)
+                                setNoteBeat(e.target.value)}}
                         >
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
                             <option>4</option>
                         </Form.Control>
-                        <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">
+                        <Form.Label className="my-1 mr-2">
                             Note:
                         </Form.Label>
                         <Form.Control
                             as="select"
                             className="my-1 mr-sm-2"
-                            id="inlineFormCustomSelectPref"
                             custom
+                            onChange={e => setNotePitch(e.target.value)}
                         >
                             <option value='C5'>C5</option>
                             <option value='B4'>B</option>
@@ -158,14 +207,14 @@ function Create() {
                             <option value='D4'>D</option>
                             <option value='C4'>C4</option>
                         </Form.Control>
-                        <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">
+                        <Form.Label className="my-1 mr-2">
                             Length:
                         </Form.Label>
                         <Form.Control
                             as="select"
                             className="my-1 mr-sm-2"
-                            id="inlineFormCustomSelectPref"
                             custom
+                            onChange={e => setNoteLen(e.target.value)}
                         >
                             {
                                 noteOptions
@@ -177,7 +226,7 @@ function Create() {
                     </Form>
                     <br></br>
                     <h5>Add a new rest:</h5>
-                    <Form inline>
+                    <Form inline onSubmit= {e => handleNewRest(e)}>
                         <Form.Label className="my-1 mr-2">
                             Measure:
                         </Form.Label>
@@ -185,6 +234,7 @@ function Create() {
                             as="select"
                             className="my-1 mr-sm-2"
                             custom
+                            onChange={e => setRestMeasure(e.target.value)}
                         >
                             <option>1</option>
                             <option>2</option>
@@ -198,12 +248,15 @@ function Create() {
                             as="select"
                             className="my-1 mr-sm-2"
                             custom
-                            onChange={changeRestOptionHandler}
+                            onChange={e => {
+                                changeRestOptionHandler(e)
+                                setRestBeat(e.target.value)
+                            }}
                         >
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
                         </Form.Control>
                         <Form.Label className="my-1 mr-2">
                             Length:
@@ -211,8 +264,8 @@ function Create() {
                         <Form.Control
                             as="select"
                             className="my-1 mr-sm-2"
-                            id="inlineFormCustomSelectPref"
                             custom
+                            onChange={e => setRestLen(e.target.value)}
                         >
                             {
                                 restOptions
