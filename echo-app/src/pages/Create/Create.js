@@ -1,6 +1,6 @@
 import React, {useEffect,useState} from 'react'
 import { Button, Form } from 'react-bootstrap'
-import {useParams} from 'react-router-dom'
+import {useParams, useHistory} from 'react-router-dom'
 import { getToken } from '../../auth/AuthAction'
 import { useAuth } from '../../auth/AuthState'
 import OpenSheetMusicDisplay from '../SheetMusic/OpenSheetMusicDisplay'
@@ -22,8 +22,10 @@ function Create() {
     const [restLen, setRestLen] = useState('whole')
     // variables for title form
     const [title, setTitle] = useState("")
+
     const [ authState, _ ] = useAuth()
     params["authorization"] = getToken()
+    const history = useHistory();
 
     useEffect(() => {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
@@ -149,8 +151,10 @@ function Create() {
             headers: params
         })
         .then(resp => resp.json())
-        .then(data => console.log(data))
-        .then(alert("Song Deleted"))
+        .then(data => {
+            console.log(data)
+            history.push('/dashboard')
+        })
     }
 
     return(
