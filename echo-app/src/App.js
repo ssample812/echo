@@ -31,7 +31,7 @@ function App() {
               <Route path='/create/:userid/:itemid'>
                 <Create></Create>
               </Route>
-              <Route path='/play'>
+              <Route path='/play/:userid/:itemid'>
                 <Play></Play>
               </Route>
             </Switch>
