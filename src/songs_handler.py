@@ -26,13 +26,7 @@ def songs_handler(event, context, client=None):
         return handle_songs_get(ddb_client, user_id)
 
     if path == '/songs' and http_method == 'POST':
-        try:
-            escaped_body = event.get('body')
-            request_body = bytes(escaped_body, "utf-8").decode("unicode_escape")
-            request_dict = json.loads(request_body)
-        except Exception:
-            raise BadRequestException('Bad request body')
-        return handle_songs_post(ddb_client, user_id, request_dict)
+        return handle_songs_post(ddb_client, user_id)
 
     if path == '/user' and http_method == 'GET':
         return handle_user_get(ddb_client, user_id)
@@ -65,10 +59,9 @@ def handle_songs_get(db: DDBClient, user_id: str):
     return db.pull_user_songs(user_id)
 
 
-def handle_songs_post(db: DDBClient, user_id: str, request: dict):
-    nickname = request.get('nickname')
-    if nickname is None:
-        raise BadRequestException("Request body missing nickname")
+def handle_songs_post(db: DDBClient, user_id: str):
+    user = db.pull_user_account(user_id)
+    nickname = user.get("Nickname", "Student")
 
     new_song = create_blank_song()
     update_composer(nickname, new_song)
@@ -80,7 +73,8 @@ def handle_songs_post(db: DDBClient, user_id: str, request: dict):
         'UserID': user_id,
         'SongName': 'My Song'
     }
-    return db.push(item_data)
+    db.push(item_data)
+    return db.pull_most_recent_user_song(user_id)
 
 
 def handle_create_get(db: DDBClient, user_id: str, item_id: int):

@@ -46,6 +46,12 @@ class DDBClient:
         )
         return response['Items']
 
+    def pull_most_recent_user_song(self, user_id):
+        response = self.table.query(
+            KeyConditionExpression=Key('UserID').eq(user_id) & Key('ItemID').gte(1)
+        )
+        return response['Items'][-1]
+
     def pull_user_account(self, user_id):
         response = self.table.query(
             KeyConditionExpression=Key('UserID').eq(user_id) & Key('ItemID').eq(0)
