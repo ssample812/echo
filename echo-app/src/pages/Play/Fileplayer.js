@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Button} from 'react-bootstrap'
 import {getToken} from '../../auth/AuthAction'
 import {useParams} from 'react-router-dom'
@@ -11,19 +11,20 @@ function FilePlayer() {
     const [statevar, setStateVar] = useState({});
     const params = useParams();
     params["Authorization"] = getToken();
-    const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
-    fetch(url, {
-        method: 'GET',
-        headers: params
-    })
-    .then(resp => resp.json())
-    .then(data => console.log(data))
-    .then(data => setStateVar(data[0]))
+    useEffect(() =>{
+        const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
+        fetch(url, {
+            method: 'GET',
+            headers: params
+        })
+        .then(resp => resp.json())
+        .then(data => setStateVar(data[0]))
+    
+        if(statevar != {}) {
+            return null;
+        }
+    },[])
 
-    if(statevar != {}) {
-        return null;
-        console.log(statevar);
-    }
 
     // may need to add some adjustments to have an actual pause
     const start = () => {

@@ -9,7 +9,7 @@ function Play() {
         <div className="container">
             <div className="card border border-dark">
                 <div className="card-body">
-                <h1>Play Page</h1>
+                    <h1>Play Page</h1>
                     <FilePlayer></FilePlayer>
                 </div>
             </div>
