@@ -5,12 +5,13 @@ import {useParams} from 'react-router-dom'
 
 function FilePlayer() {
     
-    var MIDIPlayer = require('midiplayer');
-    var MIDIFile = require('midifile');
+    var lame = require('lame');
+    var musicXmlToPcm = require('musicxml-to-pcm');
 
     const [statevar, setStateVar] = useState({});
     const params = useParams();
     params["Authorization"] = getToken();
+
     useEffect(() =>{
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
         fetch(url, {
@@ -18,28 +19,31 @@ function FilePlayer() {
             headers: params
         })
         .then(resp => resp.json())
-        .then(data => setStateVar(data[0]))
-    
+        .then(xml_data => setStateVar(xml_data))
         if(statevar != {}) {
             return null;
         }
     },[])
 
+    console.log(statevar);
+    var stream = musicXmlToPcm.newStream(statevar, 16, 44100)
 
-    // may need to add some adjustments to have an actual pause
+    var encoder = new lame.Encoder({
+        channels: 2,
+        bitDepth: 16,
+        sampleRate: 44100,
+        bitRate: 128,
+        outputSampleRate: 22050,
+        mode: lame.STEREO
+    })
+    
+    let audio = new Audio(stream.pipe(encoder));
+
     const start = () => {
-        navigator.requestMIDIAccess().then(function(midiAccess) {
-            var midiPlayer = new MIDIPlayer({
-                'output': Array.from(midiAccess.outputs)[0]
-            });
-            var midiFile = new MIDIFile(statevar);
-            midiPlayer.load(midiFile);
-            midiPlayer.play(function playCallback() {
-                midiPlayer.play(playCallback);
-            });
-        })
+        audio.play()
     }
     const stop = () => {
+        audio.pause()
     }
 
     return(
