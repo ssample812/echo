@@ -12,7 +12,7 @@ blank_score_file = 'src/blank_score.musicxml'
 test_score_file = 'tests/test_score.musicxml'
 
 
-class TestSongsHandler(TestCase):
+class TestMusicHelper(TestCase):
     def test_musicxml_to_m21_invalid_xml(self):
         self.assertEqual(musicxml_to_m21('not musicxml'), None)
 
