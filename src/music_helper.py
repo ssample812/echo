@@ -3,9 +3,6 @@ import xml.etree.ElementTree as ET
 from music21.musicxml.m21ToXml import GeneralObjectExporter
 from music21.musicxml.xmlToM21 import MusicXMLImporter
 from music21.stream import Score
-from music21.midi.translate import streamToMidiFile
-from music21.midi import MidiFile
-from midi2audio import FluidSynth
 
 
 blank_score_file = 'src/blank_score.musicxml'
