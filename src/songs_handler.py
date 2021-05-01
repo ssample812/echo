@@ -115,8 +115,8 @@ def handle_create_delete(db: DDBClient, user_id: str, item_id: int):
 
 def handle_play_get(db: DDBClient, user_id: str, item_id: int):
     db_response = db.pull_user_song(user_id, item_id)
-    music_xml = db_response[0].get("MusicXml")
-    return music_xml
+    item_data = db_response[0]
+    return item_data["MusicXml"]
 
 
 def handle_user_get(db: DDBClient, user_id: str):
