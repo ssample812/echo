@@ -1,7 +1,5 @@
 import json
 
-from botocore.exceptions import ClientError
-
 from src.db_client import DDBClient
 from src.exceptions import (BadRequestException, NoDataException,
                             NoUserIDException)
@@ -60,7 +58,10 @@ def handle_songs_get(db: DDBClient, user_id: str):
 
 
 def handle_songs_post(db: DDBClient, user_id: str):
-    user = db.pull_user_account(user_id)
+    try:
+        user = db.pull_user_account(user_id)
+    except Exception:
+        raise NoDataException("User does not exist")
     nickname = user.get("Nickname", "Student")
 
     new_song = create_blank_song()
@@ -108,7 +109,7 @@ def handle_create_put(db: DDBClient, user_id: str, item_id: int, request: dict):
 def handle_create_delete(db: DDBClient, user_id: str, item_id: int):
     try:
         return db.delete_song(user_id, item_id)
-    except ClientError:
+    except Exception:
         raise NoDataException("Song does not exist")
 
 
