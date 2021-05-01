@@ -3,9 +3,6 @@ import xml.etree.ElementTree as ET
 from music21.musicxml.m21ToXml import GeneralObjectExporter
 from music21.musicxml.xmlToM21 import MusicXMLImporter
 from music21.stream import Score
-from music21.midi.translate import streamToMidiFile
-from music21.midi import MidiFile
-from midi2audio import FluidSynth
 
 
 blank_score_file = 'src/blank_score.musicxml'
@@ -43,30 +40,3 @@ def m21_to_musicxml(score: Score = None) -> str:
     byte_str = goe.parse()
     xml_str = byte_str.decode('utf-8').strip()
     return xml_str
-
-
-'''
-Creates a MIDI file from a musicXML string
-
-:param xml_string: musicXML string
-:return: MIDI file
-'''
-def musicxml_to_midi(xml_string: str) -> MidiFile:
-    stream = musicxml_to_m21(xml_string)
-    mf = streamToMidiFile(stream)
-    return mf
-
-
-'''
-Creates an mp3 file from a MIDI file
-
-:param midi: MIDI file
-:return: mp3 file
-'''
-'''
-def midi_to_mp3(midi: MidiFile) -> file:
-    fs = FluidSynth()
-    fs.midi_to_audio(midi, 'output.wav')
-    sound = AudioSegment.from_file('output.wav', format = 'wav')
-    sound.export('output.mp3', format = 'mp3')
-'''
