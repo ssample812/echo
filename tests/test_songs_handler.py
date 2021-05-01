@@ -94,10 +94,11 @@ class TestSongsHandler(TestCase):
         self.mockClient.delete_song.return_value = 'deleted'
         self.assertEqual(songs_handler(self.mockEvent, None, self.mockClient),
             'deleted')
-
+'''
     def test_songs_play_get(self):
         self.mockEvent['requestContext']['http']['path'] = '/songs/play'
         self.mockEvent['requestContext']['http']['method'] = 'GET'
         self.mockClient.pull_user_song.return_value = 'song'
         self.assertEqual(songs_handler(self.mockEvent, None, self.mockClient),
             'song')
+'''
