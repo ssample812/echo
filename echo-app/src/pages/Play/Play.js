@@ -1,13 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
-import {getToken} from '../../auth/AuthAction'
 import FilePlayer from './Fileplayer'
 
-//once rebecca has endpoint for calling midi player add connection
 function Play() {
-    const [song, setSong] = useState({});
     const params = useParams();
-    params["Authorization"] = getToken();
+    const [song, setSong] = useState({});
 
     useEffect(() =>{
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/play';
