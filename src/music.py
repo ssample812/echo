@@ -134,16 +134,6 @@ def fix_old_ties(score: Score, new_notes: list):
 
 
 '''
-Merges successive rests in each measure of a score
-
-:param score: :class:`music23.stream.Score` object
-'''
-def merge_rests(score: Score):
-    # TO DO
-    pass
-
-
-'''
 Inserts a new note or rest into an existing score.
 Removes elements or portions of elements that overlap with the new note.
 For notes that span multiple measures, this function adds a new note to
@@ -155,6 +145,10 @@ each affected measure and uses a tie to conenct them.
 :param position: float, starting index of note (ex: beat 1 of measure 2 is position 4)
 '''
 def insert_note(score: Score, pitch: str, duration: float, position: float):
+    # if the request was missing one of these, it would be passed as None or -1
+    if not pitch or duration <= 0 or position < 0:
+        return
+
     measure_index = (int)(position // 4 + 1)
     added_elements = []  # list of inserted notes
 
@@ -200,21 +194,19 @@ def insert_note(score: Score, pitch: str, duration: float, position: float):
     if len(added_elements) > 1 and isinstance(added_elements[0], Note):
         create_tie(added_elements)
 
-    merge_rests(score)
-
 
 '''
-Recieves a json request string for updating a song and performs the appropriate update.
+Recieves a json request for updating a song and performs the appropriate update.
 This function is idempotent
 
-:param request: string, json update request
-:return: string, json response
+:param request_dict: dict, json update request
+:param my_song: :class:`music23.stream.Score` object
+:return: :class:`music23.stream.Score` object
 '''
 def handle_update_request(request_dict: dict, my_song: Score) -> Score:
     if 'title' in request_dict:
         new_title = request_dict.get('title')
         rename_song(new_title, my_song)
-        print(my_song.metadata.title)
 
     if 'note' in request_dict:
         notes = request_dict.get('note')
@@ -222,8 +214,8 @@ def handle_update_request(request_dict: dict, my_song: Score) -> Score:
             notes = [notes]
         for note in notes:
             pitch = note.get('pitch')
-            duration = (float)(note.get('duration'))
-            position = (float)(note.get('position'))
+            duration = (float)(note.get('duration', -1))
+            position = (float)(note.get('position', -1))
             insert_note(my_song, pitch, duration, position)
 
     return my_song

@@ -41,10 +41,11 @@ function Create() {
 
     /** Set length options based on beat number */
     const lengths = ["whole", "half", "quarter", "8th"]
+    const restLengths = ["whole", "half", "quarter"]
     const lengthsDict = {"whole":4, "half":2, "quarter":1, "8th":0.5}
     let noteType = lengths;
     let noteOptions = null;
-    let restType = lengths;
+    let restType = restLengths;
     let restOptions = null;
 
     const changeNoteOptionHandler = (event) => {
@@ -59,18 +60,14 @@ function Create() {
     } else if (noteSelected == 4) {
         noteType = lengths.slice(2)
     }
-    if (noteType) {
-        noteOptions = noteType.map((el) => <option>{el}</option>);
-    }
+    noteOptions = noteType.map((el) => <option>{el}</option>);
 
     if (restSelected == 2 || restSelected == 3) {
-        restType = lengths.slice(1)
+        restType = restLengths.slice(1)
     } else if (restSelected == 4) {
-        restType = lengths.slice(2)
+        restType = restLengths.slice(2)
     }
-    if (restType) {
-        restOptions = restType.map((el) => <option>{el}</option>);
-    }
+    restOptions = restType.map((el) => <option>{el}</option>);
 
     
     function handleNewTitle(e) {
@@ -92,10 +89,13 @@ function Create() {
     function handleNewNote(e) {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
         const position = (parseFloat(noteMeasure)-1) * 4 + (parseFloat(noteBeat)-1)
-        const len = lengthsDict[noteLen]
+        let len = lengthsDict[noteLen]
+        while (len + parseFloat(noteBeat) > 5) {
+            len = len / 2
+        }
         let body={"note": {"pitch": notePitch, "position": position, "duration": len}};
-        if (noteLen == '8th') {
-            body={"note": [{"pitch": notePitch, "position": position, "duration": len}, {"pitch": notePitch, "position": position+0.5, "duration": len}]};
+        if (len == .5) {
+            body={"note": [{"pitch": notePitch, "position": position, "duration": len}, {"pitch": "R", "position": position+0.5, "duration": len}]};
         }
 
         fetch(url, {
@@ -114,8 +114,11 @@ function Create() {
     function handleNewRest(e) {
         const url='https://56rrn4nhgh.execute-api.us-east-1.amazonaws.com/songs/create';
         const position = (parseFloat(restMeasure)-1) * 4 + (parseFloat(restBeat)-1)
-        const len = lengthsDict[restLen]
-        const body={"note": {"pitch": "R", "position": position, "duration": len}};
+        let len = lengthsDict[restLen]
+        while (len + parseFloat(restBeat) > 5) {
+            len = len / 2
+        }
+        let body={"note": {"pitch": "R", "position": position, "duration": len}};
         fetch(url, {
             method: 'PUT',
             headers: params,
