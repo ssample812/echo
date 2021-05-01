@@ -146,7 +146,7 @@ each affected measure and uses a tie to conenct them.
 '''
 def insert_note(score: Score, pitch: str, duration: float, position: float):
     # if the request was missing one of these, it would be passed as None or -1
-    if not pitch or duration <= 0 or position <= 0:
+    if not pitch or duration <= 0 or position < 0:
         return
 
     measure_index = (int)(position // 4 + 1)
