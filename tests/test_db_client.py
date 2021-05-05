@@ -17,9 +17,28 @@ class DDBClientTests(unittest.TestCase):
         res = self.test_client.push(data) 
         assert (res == "response")
         
-    #Im only testing one pull function because they do the same thing :)
-    def test_pull(self):
+    def test_pull_songs(self):
+        return_data = [{"data": 1}]
+        self.test_client.table.query.return_value = {'Items': return_data}
+        assert(self.test_client.pull_user_songs('uid') == return_data)
+    
+    def test_pull_song(self):
+        return_data = [{"data": 1}]
+        self.test_client.table.query.return_value = {'Items': return_data}
+        assert(self.test_client.pull_user_songs('uid') == return_data)
+
+    def test_pull_recent_song(self):
+        return_data = [{"data": 1},{"data2":2}]
+        self.test_client.table.query.return_value = {'Items': return_data}
+        assert(self.test_client.pull_user_songs('uid') == return_data[-1])
+    
+    def test_pull_account(self):
         return_data = [{"data": 1}]
         self.test_client.table.query.return_value = {'Items': return_data}
         assert(self.test_client.pull_user_account('uid') == return_data[0])
-        assert(self.test_client.pull_user_songs('uid') == return_data)
+
+    def test_delete(self):
+        response = "item_deleted"
+        self.test_client.table.delete_item.return_value = response
+        assert(self.test_client.delete_song('uid','iid') == response)
+
