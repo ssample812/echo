@@ -30,7 +30,7 @@ class DDBClientTests(unittest.TestCase):
     def test_pull_recent_song(self):
         return_data = [{"data": 1},{"data2":2}]
         self.test_client.table.query.return_value = {'Items': return_data}
-        assert(self.test_client.pull_user_songs('uid') == return_data[-1])
+        assert(self.pull_most_recent_user_song('uid') == return_data[-1])
     
     def test_pull_account(self):
         return_data = [{"data": 1}]
